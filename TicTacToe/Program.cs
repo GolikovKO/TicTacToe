@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace TicTacToe
@@ -20,11 +21,19 @@ namespace TicTacToe
             for (int i = 0; i < 9; i++)
             {
                 DrawField();
+                Console.WriteLine(" Ход номер " + (i + 1));
                 Console.WriteLine(" Ходит " + GetPlayer(current));
                 Console.WriteLine(" Введите X.");
                 int x = int.Parse(Console.ReadLine());
                 Console.WriteLine(" Введите Y.");
                 int y = int.Parse(Console.ReadLine());
+                if ((x < 1) || (x > 3) || (y < 1) || (y > 3))
+                {
+                    Console.WriteLine(" Недопустимые координаты.");
+                    Thread.Sleep(500);
+                    i--;
+                    continue;
+                }
                 field[x - 1, y - 1] = current;
                 current = (current == 1) ? 0 : 1;
             }
