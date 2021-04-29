@@ -13,13 +13,14 @@ namespace TicTacToe
                                                                     //любыми значениями, кроме 1 и 0 потому что это коды для крестика и нолика.
         const int PLAYER_X = 1;
         const int PLAYER_O = 0;
+
         static bool flag = false;
 
         static int current = PLAYER_X;
 
         static void Main(string[] args)
         {
-            for (int i = 0; i < 9; i++)
+            for (int i = 0; i < 9; ++i)
             {
                 DrawField();
                 Console.WriteLine(" Ход номер " + (i + 1));
@@ -37,11 +38,27 @@ namespace TicTacToe
                     continue;
                 }
 
+                if ((field[x - 1, y - 1] == PLAYER_O) || (field[x - 1, y - 1] == PLAYER_X))
+                {
+                    Console.WriteLine(" Координаты заняты.");
+                    Thread.Sleep(900);
+                    i--;
+                    continue;
+                }
+
+                if (i > 7)
+                {
+                    Console.WriteLine(" Никто не выиграл.");
+                    Thread.Sleep(1300);
+                    break;
+                }
+
                 field[x - 1, y - 1] = current;
 
-                flag = Check();
+                flag = Check(current);
                 if (flag)
                 {
+                    DrawField();
                     Console.WriteLine(" Победитель " + GetPlayer(current) + " !");
                     Thread.Sleep(3000);
                     break;
@@ -50,23 +67,26 @@ namespace TicTacToe
             }
         }
 
-        static bool Check()
+        static bool Check(int current)
         {
             if
                 (
 
-                ((field[0, 0] == field[0, 1]) && (field[0, 1] == field[0, 2])) || // первая строчка
-                ((field[1, 0] == field[1, 1]) && (field[1, 1] == field[1, 2]))  //|| // вторая строчка
-                //(field[2, 0] == field[2, 1] && field[2, 1] == field[2, 2])    // третья строчка
+                ((field[0, 0] == field[0, 1]) && (field[0, 0] == current) && (field[0, 1] == field[0, 2])) || // первая строчка
+                ((field[1, 0] == field[1, 1]) && (field[1, 0] == current) && (field[1, 1] == field[1, 2])) || // вторая строчка
+                ((field[2, 0] == field[2, 1]) && (field[2, 0] == current) && (field[2, 1] == field[2, 2])) || // третья строчка
 
-                )
-            {
+                ((field[0, 0] == field[1, 0]) && (field[1, 0] == current) && (field[1, 0] == field[2, 0])) || // первый столбик
+                ((field[0, 1] == field[1, 1]) && (field[1, 1] == current) && (field[1, 1] == field[2, 1])) || // второй столбик
+                ((field[0, 2] == field[1, 2]) && (field[1, 2] == current) && (field[1, 2] == field[2, 2])) || // третий столбик
+
+                ((field[0, 0] == field[1, 1]) && (field[1, 1] == current) && (field[1, 1] == field[2, 2])) || // диагональ из 11 в 33
+                ((field[0, 2] == field[1, 1]) && (field[1, 1] == current) && (field[1, 1] == field[2, 0]))    // диагональ из 13 в 31
+
+                )          
                 return true;
-            }
             else
-            {
                 return false;
-            }
         }
 
         static string GetPlayer(int player)
